@@ -1,0 +1,5 @@
+# Dataset is not redistributed - download it from Kaggle (see README); its hash is in config.yaml
+data/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store

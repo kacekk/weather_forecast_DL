@@ -1,0 +1,25 @@
+{
+  "params": {
+    "batch_size": 32,
+    "bidirectional": false,
+    "calendar": true,
+    "daily_arch": "gru",
+    "dense": [
+      32
+    ],
+    "dropout": 0.4,
+    "epochs": 300,
+    "hourly_arch": "gru",
+    "input": "daily",
+    "l2": 0.0,
+    "loss": "huber",
+    "lr": 0.001,
+    "patience": 15,
+    "reduce_lr": true,
+    "rnn_dropout": 0.0,
+    "target": "delta",
+    "text": false,
+    "units": 32
+  },
+  "epochs": 31
+}

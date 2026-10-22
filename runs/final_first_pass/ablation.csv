@@ -1,0 +1,8 @@
+dropped,mean,std,change_vs_full
+(none),1.1288,0.0092,0.0
+temperature,1.2256,0.0148,0.0968
+moisture,1.1428,0.0033,0.014
+visibility,1.1228,0.0037,-0.0061
+pressure,1.186,0.007,0.0571
+wind,1.1668,0.0065,0.0379
+sky,1.115,0.0027,-0.0138

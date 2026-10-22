@@ -1,0 +1,61 @@
+sorted_in_file: False
+duplicate_timestamps: 24
+loud_cover_unique: [0.0]
+pressure_zero_rows: 1288
+humidity_zero_rows: 22
+
+=== 1. search (validation 2014-2015)
+  -> after stage 'target': 1.268 ± 0.024
+  -> after stage 'input': 1.178 ± 0.035
+  -> after stage 'size': 1.161 ± 0.018
+  -> after stage 'regularisation': 1.139 ± 0.016
+  -> after stage 'optimisation': 1.134 ± 0.009
+  -> after stage 'loss': 1.129 ± 0.009
+  -> after stage 'extra_inputs': 1.129 ± 0.009
+  -> after stage 'second_pass_input': 1.113 ± 0.014
+  -> after stage 'second_pass_target': 1.107 ± 0.014
+
+=== 2. blocked K-fold over years
+  top1: CV MAE 1.173 ± 0.038
+  top2: CV MAE 1.156 ± 0.030
+  top3: CV MAE 1.221 ± 0.051
+  winner: {"daily_arch": "gru", "dense": [32], "dropout": 0.4, "input": "both", "loss": "huber", "reduce_lr": true, "target": "delta"} | epochs for final training: 29
+
+=== 3. ablation
+  ablation drop temperature                              seed   123 fold val: val MAE 1.159  (68 ep, 32.5s)
+  ablation drop temperature                              seed  2137 fold val: val MAE 1.149  (60 ep, 28.5s)
+  ablation drop temperature                              seed 15190 fold val: val MAE 1.164  (54 ep, 27.1s)
+  ablation drop moisture                                 seed   123 fold val: val MAE 1.139  (48 ep, 24.1s)
+  ablation drop moisture                                 seed  2137 fold val: val MAE 1.129  (46 ep, 23.6s)
+  ablation drop moisture                                 seed 15190 fold val: val MAE 1.099  (35 ep, 17.8s)
+  ablation drop visibility                               seed   123 fold val: val MAE 1.116  (58 ep, 28.5s)
+  ablation drop visibility                               seed  2137 fold val: val MAE 1.127  (34 ep, 17.2s)
+  ablation drop visibility                               seed 15190 fold val: val MAE 1.086  (44 ep, 21.9s)
+  ablation drop pressure                                 seed   123 fold val: val MAE 1.122  (43 ep, 21.4s)
+  ablation drop pressure                                 seed  2137 fold val: val MAE 1.141  (35 ep, 18.0s)
+  ablation drop pressure                                 seed 15190 fold val: val MAE 1.136  (32 ep, 16.6s)
+  ablation drop wind                                     seed   123 fold val: val MAE 1.154  (51 ep, 25.2s)
+  ablation drop wind                                     seed  2137 fold val: val MAE 1.158  (64 ep, 31.3s)
+  ablation drop wind                                     seed 15190 fold val: val MAE 1.132  (45 ep, 22.5s)
+  ablation drop sky                                      seed   123 fold val: val MAE 1.119  (61 ep, 29.9s)
+  ablation drop sky                                      seed  2137 fold val: val MAE 1.109  (51 ep, 25.0s)
+  ablation drop sky                                      seed 15190 fold val: val MAE 1.094  (44 ep, 21.7s)
+
+=== 4. final model, test set 2016
+  seed 123: test MAE 1.254
+  seed 2137: test MAE 1.231
+  seed 15190: test MAE 1.323
+{
+  "test_mae_mean": 1.269116759300232,
+  "test_mae_std": 0.04782999819800757,
+  "test_mae_per_seed": [
+    1.2540359497070312,
+    1.2306448221206665,
+    1.322669506072998
+  ],
+  "test_mae_seed_ensemble": 1.232436180114746,
+  "test_rmse_seed_ensemble": 1.6314114332199097,
+  "test_persistence_mae": 1.427953839302063,
+  "test_climatology_mae": 2.53536441393052,
+  "epochs": 29
+}

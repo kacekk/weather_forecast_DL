@@ -31,9 +31,7 @@ Search: 46 configurations, 219 training runs (≈ 55 min on an Apple-silicon CPU
 
 | File | What it is |
 |---|---|
-| `weather_forecast.ipynb` | **the report** – cleaning, exploration, features, experiments, final result (matches the presentation outline in `Grading.md`) |
-| `weather_lib.py` | data cleaning, feature engineering, windowing, model building and training |
-| `experiments.py` | the full search → K-fold → ablation → final test pipeline |
+| `weather_forecast.ipynb` | **the whole project**: cleaning, exploration, features, model code, experiment search → K-fold → ablation → final test, and the conclusions (matches the presentation outline in `Grading.md`) |
 | `config.yaml` | every setting, including the search stages |
 | `runs/` | experiment log, results tables (`search_steps.csv`, `cv.csv`, `ablation.csv`), final models, test predictions; `final_first_pass/` holds the abandoned first-pass final model |
 | `requirements.txt` | exact library versions |
@@ -46,11 +44,10 @@ The dataset is not included in this repo. Download it from Kaggle ([arnab132/wea
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 mkdir -p data && python -c "import kagglehub, shutil; shutil.copy(kagglehub.dataset_download('arnab132/weather-dataset') + '/weatherHistory.csv', 'data/')"
-python experiments.py              # full experiment pipeline (finished runs in runs/experiments.jsonl are reused)
-jupyter lab weather_forecast.ipynb # the report
+jupyter lab weather_forecast.ipynb # run all cells top to bottom (~2 min)
 ```
 
-TensorFlow doesn't support Python 3.14 yet, so use Python 3.12.
+Finished training runs are reused from `runs/experiments.jsonl`, with identical results, because every run is seeded and deterministic. Delete that file to retrain the whole search from scratch (≈ 1 h on CPU). TensorFlow doesn't support Python 3.14 yet, so use Python 3.12.
 
 ## Use of AI tools
 

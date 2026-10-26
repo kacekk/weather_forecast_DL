@@ -1,16 +1,16 @@
 {
-  "test_mae_mean": 1.269116759300232,
-  "test_mae_std": 0.04782999819800757,
+  "test_mae_mean": 1.1783778667449951,
+  "test_mae_std": 0.01020160845259793,
   "test_mae_per_seed": [
-    1.2540359497070312,
-    1.2306448221206665,
-    1.322669506072998
+    1.1666691303253174,
+    1.1831133365631104,
+    1.1853511333465576
   ],
-  "test_mae_seed_ensemble": 1.232436180114746,
-  "test_rmse_seed_ensemble": 1.6314114332199097,
+  "test_mae_seed_ensemble": 1.1601502895355225,
+  "test_rmse_seed_ensemble": 1.5081734657287598,
   "test_persistence_mae": 1.427953839302063,
   "test_climatology_mae": 2.53536441393052,
-  "epochs": 29,
+  "epochs": 91,
   "params": {
     "batch_size": 32,
     "bidirectional": false,
@@ -24,13 +24,15 @@
     "hourly_arch": "gru",
     "input": "both",
     "l2": 0.0,
-    "loss": "huber",
-    "lr": 0.001,
+    "loss": "mse",
+    "lr": 0.0003,
     "patience": 15,
-    "reduce_lr": true,
+    "reduce_lr": false,
     "rnn_dropout": 0.0,
     "target": "delta",
     "text": false,
-    "units": 32
+    "units": 32,
+    "aux": "hourly24",
+    "attention": true
   }
 }

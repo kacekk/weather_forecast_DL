@@ -12,14 +12,17 @@
     "hourly_arch": "gru",
     "input": "both",
     "l2": 0.0,
-    "loss": "huber",
-    "lr": 0.001,
+    "loss": "mse",
+    "lr": 0.0003,
     "patience": 15,
-    "reduce_lr": true,
+    "reduce_lr": false,
     "rnn_dropout": 0.0,
     "target": "delta",
     "text": false,
-    "units": 32
+    "units": 32,
+    "aux": "hourly24",
+    "attention": true
   },
-  "epochs": 29
+  "epochs": 91,
+  "seed_ensemble": true
 }

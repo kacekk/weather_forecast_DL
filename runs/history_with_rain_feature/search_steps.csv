@@ -1,0 +1,29 @@
+stage,change,mean,std,kept
+baseline,Class 2 baseline,1.4542,0.0498,True
+target,target=delta,1.2681,0.0238,True
+input,"input=hourly, hourly_arch=gru",1.2494,0.0445,False
+input,"input=hourly, hourly_arch=lstm",1.2748,0.0019,False
+input,"input=hourly, hourly_arch=conv1d",1.2904,0.0201,False
+input,"input=both, hourly_arch=gru",1.2163,0.0453,False
+input,"input=daily, daily_arch=gru",1.1775,0.0351,True
+size,units=16,1.1895,0.0054,False
+size,units=64,1.1669,0.0123,False
+size,dense=[],1.1783,0.0171,False
+size,dense=[32],1.161,0.0184,True
+size,bidirectional=True,1.1955,0.0308,False
+regularisation,dropout=0.2,1.1437,0.0211,False
+regularisation,dropout=0.4,1.139,0.0163,True
+regularisation,rnn_dropout=0.2,1.1589,0.0071,False
+regularisation,l2=0.0001,1.1595,0.0199,False
+optimisation,lr=0.0003,1.1349,0.0158,False
+optimisation,lr=0.003,1.1599,0.0183,False
+optimisation,batch_size=16,1.14,0.0154,False
+optimisation,batch_size=64,1.138,0.02,False
+optimisation,reduce_lr=True,1.134,0.009,True
+loss,loss=huber,1.1288,0.0092,True
+extra_inputs,text=True,1.1449,0.0031,False
+extra_inputs,calendar=False,1.19,0.007,False
+second_pass_input,"input=hourly, hourly_arch=gru",1.1315,0.0107,False
+second_pass_input,"input=hourly, hourly_arch=lstm",1.209,0.0146,False
+second_pass_input,"input=both, daily_arch=gru, hourly_arch=gru",1.1131,0.0139,True
+second_pass_target,target=absolute,1.1067,0.0142,True

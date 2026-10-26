@@ -1,0 +1,8 @@
+model,cv_mean,cv_std,cv_ens_mean,cv_ens_std,median_best_epoch,why,paired diff,SE,t
+K-fold winner of §7 (reference),1.1578,0.0346,1.1377,0.0345,71,,,,
+multi-task: predict mean + min + max,1.1543,0.0302,1.1339,0.0309,85,"min/max are driven by the same physics; extra supervision helps with only ~3,600 training days",-0.0035,0.0053,-0.6594
+predict the 24 hourly temperatures,1.1475,0.0347,1.1296,0.035,83,a richer target - the model must get the whole daily curve right; the mean is their average,-0.0103,0.0039,-2.6239
+Conv1D -> GRU on the hourly input,1.1739,0.0267,1.1419,0.0314,54,convolution summarises 3-hour blocks so the GRU reads 24 steps instead of 72,0.0161,0.0044,3.6145
+attention over the 72 hours,1.1477,0.031,1.1252,0.033,70,lets the model weight the most informative hours (e.g. the latest ones) instead of only the last GRU state,-0.0101,0.0035,-2.8489
+wider network + stronger dropout,1.1477,0.0353,1.1335,0.0343,53,"more capacity, with more dropout to keep overfitting in check",-0.0101,0.0069,-1.4593
+combination: predict the 24 hourly temperatures + attention over the 72 hours,1.1448,0.0327,1.1228,0.0376,91,all ideas that improved K-fold individually,-0.013,0.0043,-3.0197

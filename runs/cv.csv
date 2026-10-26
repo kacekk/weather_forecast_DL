@@ -1,4 +1,4 @@
 config,params,cv_mean,cv_std,median_best_epoch
-1,"{""daily_arch"": ""gru"", ""dense"": [32], ""dropout"": 0.4, ""input"": ""both"", ""loss"": ""huber"", ""reduce_lr"": true}",1.1731,0.0381,35
-2,"{""daily_arch"": ""gru"", ""dense"": [32], ""dropout"": 0.4, ""input"": ""both"", ""loss"": ""huber"", ""reduce_lr"": true, ""target"": ""delta""}",1.1558,0.0299,29
-3,"{""daily_arch"": ""gru"", ""dense"": [32], ""dropout"": 0.4, ""loss"": ""huber"", ""reduce_lr"": true, ""target"": ""delta""}",1.221,0.0509,31
+1,"{""daily_arch"": ""gru"", ""dense"": [32], ""dropout"": 0.4, ""input"": ""hourly"", ""lr"": 0.0003, ""target"": ""delta""}",1.1754,0.0471,97
+2,"{""daily_arch"": ""gru"", ""dense"": [32], ""dropout"": 0.4, ""input"": ""both"", ""lr"": 0.0003, ""target"": ""delta""}",1.1578,0.0346,71
+3,"{""daily_arch"": ""gru"", ""dense"": [32], ""dropout"": 0.4, ""input"": ""hourly"", ""lr"": 0.0003}",1.1863,0.039,62

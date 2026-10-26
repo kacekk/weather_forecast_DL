@@ -1,0 +1,9 @@
+model,cv_mean,cv_std
+Ridge regression (alpha=1.0),1.368,0.047
+Ridge regression (alpha=10.0),1.342,0.042
+Ridge regression (alpha=100.0),1.295,0.04
+Ridge regression (alpha=1000.0),1.288,0.034
+Ridge regression (alpha=3000.0),1.336,0.04
+Ridge regression (alpha=10000.0),1.408,0.053
+Ridge regression (alpha=30000.0),1.477,0.068
+Gradient boosting (HistGradientBoosting),1.221,0.038

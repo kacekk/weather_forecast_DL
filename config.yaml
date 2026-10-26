@@ -98,3 +98,41 @@ cv:
 
 # Final evaluation on the 2016 test set, done once after the configuration is chosen.
 run_test: true
+
+# ---------------------------------------------------------------------------------------------
+# Beyond the course templates (§7b): ideas tailored to weather data, each added on top of the
+# K-fold winner above and evaluated directly with blocked K-fold (5 folds x 3 seeds).
+tailored:
+  - name: "multi-task: predict mean + min + max"
+    why: "min/max are driven by the same physics; extra supervision helps with only ~3,600 training days"
+    change: {aux: minmax}
+  - name: "predict the 24 hourly temperatures"
+    why: "a richer target - the model must get the whole daily curve right; the mean is their average"
+    change: {aux: hourly24}
+  - name: "Conv1D -> GRU on the hourly input"
+    why: "convolution summarises 3-hour blocks so the GRU reads 24 steps instead of 72"
+    change: {hourly_arch: conv_gru}
+  - name: "attention over the 72 hours"
+    why: "lets the model weight the most informative hours (e.g. the latest ones) instead of only the last GRU state"
+    change: {attention: true}
+  - name: "wider network + stronger dropout"
+    why: "more capacity, with more dropout to keep overfitting in check"
+    change: {units: 64, dropout: 0.5}
+
+# Classic machine-learning benchmarks on the same inputs, target and folds (is deep learning needed?).
+classic:
+  hgb: {max_iter: 1000, learning_rate: 0.05, max_leaf_nodes: 31, l2_regularization: 1.0}
+  ridge_alphas: [1.0, 10.0, 100.0, 1000.0, 3000.0, 10000.0, 30000.0]
+
+# Architecture justification (§7c): remove / replace one component of the final model at a time.
+justification:
+  - {name: "without the hourly branch", change: {input: daily}}
+  - {name: "without the daily branch", change: {input: hourly}}
+  - {name: "predict the temperature instead of the change", change: {target: absolute}}
+  - {name: "daily rows flattened instead of GRU", change: {daily_arch: flatten}}
+  - {name: "without dropout", change: {dropout: 0.0}}
+  - {name: "MSE instead of Huber loss", change: {loss: mse}}
+  - {name: "without the calendar input", change: {calendar: false}}
+  - {name: "without ReduceLROnPlateau", change: {reduce_lr: false}}
+  - {name: "one output instead of 24 hourly outputs", change: {aux: none}}
+  - {name: "without attention", change: {attention: false}}

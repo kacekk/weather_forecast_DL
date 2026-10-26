@@ -14,6 +14,7 @@ bleach==6.4.0
 certifi==2026.10.18
 cffi==2.1.1
 charset-normalizer==3.5.2
+cloudpickle==3.1.2
 comm==0.2.3
 contourpy==1.4.0
 cycler==0.12.1
@@ -40,6 +41,7 @@ ipython_pygments_lexers==1.1.1
 isoduration==20.11.0
 jedi==0.20.1
 Jinja2==3.1.6
+joblib==1.6.0
 json5==0.17.3
 jsonpointer==3.4
 jsonschema==4.26.0
@@ -70,6 +72,7 @@ mistune==3.4.0
 ml_dtypes==0.6.0
 mpmath==1.3.0
 namex==0.1.0
+narwhals==2.27.1
 nbclient==0.11.0
 nbconvert==7.17.2
 nbformat==5.11.1
@@ -108,6 +111,8 @@ rfc3986-validator==0.1.1
 rfc3987-syntax==1.1.0
 rich==15.0.0
 rpds-py==2026.9.1
+scikit-learn==1.9.1
+scipy==1.18.1
 Send2Trash==2.1.0
 setuptools==84.0.0
 six==1.17.0
@@ -119,6 +124,7 @@ tensorboard-data-server==0.7.2
 tensorflow==2.21.0
 termcolor==3.3.0
 terminado==0.18.1
+threadpoolctl==3.7.0
 tinycss2==1.5.1
 torch==2.14.1
 torchvision==0.29.1

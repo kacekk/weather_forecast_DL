@@ -11,29 +11,31 @@ Final project for the Deep Learning course (Koźmiński University 2026/27, [`pa
 |---|---|
 | Climatology (average for that day of year) | 2.535 |
 | Persistence (tomorrow = today) | 1.428 |
-| **Final model** – mean ± std over 3 seeds | **1.269 ± 0.048** |
-| **Final model** – average of the 3 seeds' predictions | **1.232** |
+| Final network – single models (3 seeds, mean ± std) | 1.178 ± 0.010 |
+| **Final network – average of the 3 seeds** | **1.160** |
 
-That's 11–14 % better than persistence. 5-fold K-fold over years (2006–2015) gave an estimate of 1.156 ± 0.030 °C.
+That's **19 % better than persistence**. K-fold over 2006–2015 estimated 1.123 °C. On the same folds, gradient boosting reaches 1.221 °C and Ridge regression 1.288 °C.
 
-**Final network:** two GRU branches – the 72 hourly readings (14 features) and the 3 daily rows (17 features) – plus the day of year → `Dense(32, relu)` → `Dropout(0.4)` → `Dense(1)`. It predicts the **change** from today's mean. Huber loss, Adam with ReduceLROnPlateau.
+**Final network:** two GRU branches (the 72 hourly readings, with attention pooling, and the 3 daily rows) plus the day of year → `Dense(32, relu)` → `Dropout(0.4)` → `Dense(24)`. It predicts the next day's 24 hourly temperatures as changes from today's mean, and the predicted daily mean is their average. Three models trained with different seeds are averaged. The notebook justifies every component with a K-fold ablation (§7c).
 
 ## How it was built
 
-The workflow follows the course materials:
-- **Class 1 – reproducible experiments:** settings in `config.yaml`, fixed seeds (123, 2137, 15190), a split made once, normalisation fitted on training data only, every configuration trained with 3 seeds and reported as mean ± std, the test set kept for the end, and a reproducibility check.
-- **Class 2 – tuning:** start from the tabular baseline (Dense 64 → 32 → 1, Adam, MSE), change one thing per experiment, add dropout when overfitting, tune learning rate and batch size.
-- **`regression.ipynb`:** scale the target, use K-fold validation, retrain the final model on all non-test data.
+1. **Course-style search (§7):** start from the Class 2 tabular baseline, change one thing per experiment (Class 2), 3 seeds per configuration, blocked K-fold over years for the top configurations (`regression.ipynb`).
+2. **Beyond the course templates (§7b):** weather-specific ideas evaluated with K-fold and paired *t*-statistics: 24-hour output, attention, multi-task min/max, Conv1D→GRU, a wider network. Classic ML benchmarks for comparison.
+3. **Justification (§7c):** each component removed in turn and its cost measured.
+4. **Final test:** retrain on 2006–2015, evaluate on 2016.
 
-Search: 46 configurations, 219 training runs (≈ 55 min on an Apple-silicon CPU). Every run is logged in `runs/experiments.jsonl`.
+The workflow follows the Class 1 reproducibility checklist: settings in `config.yaml`, fixed seeds (123, 2137, 15190), normalisation fitted on training data only, results as mean ± std, and a reproducibility check. 327 training runs in total are logged in `runs/experiments.jsonl`.
+
+**Transparency:** the test year was evaluated twice before, with earlier models that used a rain feature we later removed. Rain labels exist only in 2012 and 2016 (Issue 8 in the notebook). Those results are in `runs/history_with_rain_feature/`, and none of them was used for a modelling decision.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| `weather_forecast.ipynb` | **the whole project**: cleaning, exploration, features, model code, experiment search → K-fold → ablation → final test, and the conclusions (matches the presentation outline in `Grading.md`) |
-| `config.yaml` | every setting, including the search stages |
-| `runs/` | experiment log, results tables (`search_steps.csv`, `cv.csv`, `ablation.csv`), final models, test predictions; `final_first_pass/` holds the abandoned first-pass final model |
+| `weather_forecast.ipynb` | **the whole project**: cleaning, exploration, features, model code, experiments, justification, final test and conclusions (follows the presentation outline in `Grading.md`) |
+| `config.yaml` | every setting: the search plan, tailored ideas, classic benchmarks, justification ablation |
+| `runs/` | experiment log, validation predictions of K-fold runs (`preds/`), results tables, final models and test predictions |
 | `requirements.txt` | exact library versions |
 
 ## Reproduce
@@ -44,11 +46,11 @@ The dataset is not included in this repo. Download it from Kaggle ([arnab132/wea
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 mkdir -p data && python -c "import kagglehub, shutil; shutil.copy(kagglehub.dataset_download('arnab132/weather-dataset') + '/weatherHistory.csv', 'data/')"
-jupyter lab weather_forecast.ipynb # run all cells top to bottom (~2 min)
+jupyter lab weather_forecast.ipynb # run all cells top to bottom (~5 min)
 ```
 
-Finished training runs are reused from `runs/experiments.jsonl`, with identical results, because every run is seeded and deterministic. Delete that file to retrain the whole search from scratch (≈ 1 h on CPU). TensorFlow doesn't support Python 3.14 yet, so use Python 3.12.
+Finished training runs are reused from `runs/experiments.jsonl` and `runs/preds/`, with identical results, because every run is seeded and deterministic. Delete them to retrain everything from scratch (≈ 4.5 h of CPU training run one after another). TensorFlow doesn't support Python 3.14 yet, so use Python 3.12.
 
 ## Use of AI tools
 
-Required by the course: the code structure and first drafts of the explanations were produced with Claude Code (Anthropic) and reviewed by the team. Details are at the end of the notebook.
+Required by the course: the code and first drafts of the explanations were produced with Claude Code (Anthropic) and reviewed by the team. Details are at the end of the notebook.

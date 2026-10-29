@@ -1,0 +1,42 @@
+{
+  "test_mae_mean": 1.1732616821924846,
+  "test_mae_std": 0.019305109600952015,
+  "test_mae_per_seed": [
+    1.1648234128952026,
+    1.1596122980117798,
+    1.1953493356704712
+  ],
+  "test_mae_seed_ensemble": 1.1516016721725464,
+  "test_rmse_seed_ensemble": 1.556653618812561,
+  "test_persistence_mae": 1.6729322671890259,
+  "test_climatology_mae": 2.841690908296657,
+  "epochs": 91,
+  "params": {
+    "batch_size": 32,
+    "bidirectional": false,
+    "calendar": true,
+    "daily_arch": "gru",
+    "dense": [
+      32
+    ],
+    "dropout": 0.4,
+    "epochs": 300,
+    "hourly_arch": "gru",
+    "input": "both",
+    "l2": 0.0,
+    "loss": "mse",
+    "lr": 0.0003,
+    "patience": 15,
+    "reduce_lr": false,
+    "rnn_dropout": 0.0,
+    "target": "delta",
+    "text": false,
+    "units": 32,
+    "aux": "hourly24",
+    "attention": true
+  },
+  "test_min_mae_model": 1.3199281692504883,
+  "test_min_mae_persistence": 2.1847763061523438,
+  "test_max_mae_model": 2.0436298847198486,
+  "test_max_mae_persistence": 2.553427219390869
+}

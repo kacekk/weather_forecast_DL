@@ -1,28 +1,91 @@
 {
-  "params": {
-    "batch_size": 32,
-    "bidirectional": false,
-    "calendar": true,
-    "daily_arch": "gru",
-    "dense": [
-      32
-    ],
-    "dropout": 0.4,
-    "epochs": 300,
-    "hourly_arch": "gru",
-    "input": "both",
-    "l2": 0.0,
-    "loss": "mse",
-    "lr": 0.0003,
-    "patience": 15,
-    "reduce_lr": false,
-    "rnn_dropout": 0.0,
-    "target": "delta",
-    "text": false,
-    "units": 32,
-    "aux": "hourly24",
-    "attention": true
+  "mean": {
+    "model": "Two-branch GRU + attention",
+    "output": "hourly24",
+    "params": {
+      "input": "both",
+      "daily_arch": "gru",
+      "hourly_arch": "gru",
+      "units": 32,
+      "bidirectional": false,
+      "dense": [
+        32
+      ],
+      "dropout": 0.4,
+      "rnn_dropout": 0.0,
+      "l2": 0.0,
+      "target": "delta",
+      "text": false,
+      "calendar": true,
+      "loss": "mse",
+      "lr": 0.0003,
+      "batch_size": 32,
+      "epochs": 300,
+      "patience": 15,
+      "reduce_lr": false,
+      "attention": true,
+      "aux": "hourly24"
+    },
+    "epochs": 91,
+    "seed_ensemble": true
   },
-  "epochs": 91,
-  "seed_ensemble": true
+  "min": {
+    "model": "Two-branch GRU",
+    "output": "single",
+    "params": {
+      "input": "both",
+      "daily_arch": "gru",
+      "hourly_arch": "gru",
+      "units": 32,
+      "bidirectional": false,
+      "dense": [
+        32
+      ],
+      "dropout": 0.4,
+      "rnn_dropout": 0.0,
+      "l2": 0.0,
+      "target": "delta",
+      "text": false,
+      "calendar": true,
+      "loss": "mse",
+      "lr": 0.0003,
+      "batch_size": 32,
+      "epochs": 300,
+      "patience": 15,
+      "reduce_lr": false,
+      "target_var": "min"
+    },
+    "epochs": 83,
+    "seed_ensemble": true
+  },
+  "max": {
+    "model": "Two-branch GRU + attention",
+    "output": "single",
+    "params": {
+      "input": "both",
+      "daily_arch": "gru",
+      "hourly_arch": "gru",
+      "units": 32,
+      "bidirectional": false,
+      "dense": [
+        32
+      ],
+      "dropout": 0.4,
+      "rnn_dropout": 0.0,
+      "l2": 0.0,
+      "target": "delta",
+      "text": false,
+      "calendar": true,
+      "loss": "mse",
+      "lr": 0.0003,
+      "batch_size": 32,
+      "epochs": 300,
+      "patience": 15,
+      "reduce_lr": false,
+      "attention": true,
+      "target_var": "max"
+    },
+    "epochs": 57,
+    "seed_ensemble": true
+  }
 }

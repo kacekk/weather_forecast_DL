@@ -6,7 +6,7 @@ data:
   sha256: 22c028ceb97c6ad405831dfda61f0235532d9ab873229ff57ce4240853ef0a1f
   source: https://www.kaggle.com/datasets/arnab132/weather-dataset (version 1, downloaded 2026-10-22)
   timezone: Europe/Budapest
-  window_days: 3            # model sees the last 3 days and predicts the next day's mean temperature
+  window_days: 3            # model sees the last 3 days and predicts the next day's mean, min and max
   # Chronological split by the date being predicted (no shuffling across time).
   train_end: "2013-12-31"   # train: 2006-2013
   val_end: "2015-12-31"     # validation: 2014-2015, test: 2016
@@ -16,7 +16,8 @@ data:
 
 seeds: [123, 2137, 15190]   # every configuration is trained with these 3 seeds
 
-# Starting point = the Class 2 tabular baseline: Dense(64) -> Dense(32) -> Dense(1), Adam, MSE, batch 32.
+# The Class 2 tabular baseline exactly as taught: Dense(64) -> Dense(32) -> Dense(1), Adam, MSE, batch 32.
+# All parameter names are explained here; the candidates below change only some of them.
 baseline:
   input: daily              # daily | hourly | both
   daily_arch: flatten       # how the 3 daily rows are read: flatten | lstm | gru
@@ -27,7 +28,7 @@ baseline:
   dropout: 0.0
   rnn_dropout: 0.0
   l2: 0.0
-  target: absolute          # absolute | delta (= tomorrow's mean minus today's mean)
+  target: absolute          # absolute | delta (= tomorrow's value minus today's value)
   text: false               # add the 3 'Daily Summary' sentences as multi-hot words (Class 2 NLP)
   calendar: true            # day-of-year (sin, cos) of the predicted day
   loss: mse                 # mse | huber
@@ -37,105 +38,82 @@ baseline:
   patience: 15              # early stopping on validation loss
   reduce_lr: false
 
-# Greedy search: one change at a time (Class 2: "one parameter change per one test").
-# Each stage tries its variants on top of the current best configuration; a variant is kept
-# only if its mean validation MAE over the 3 seeds is lower than the current best.
-search:
-  - name: target
-    variants:
-      - {target: delta}
-  - name: input
-    variants:
-      - {input: hourly, hourly_arch: gru}
-      - {input: hourly, hourly_arch: lstm}
-      - {input: hourly, hourly_arch: conv1d}
-      - {input: both, hourly_arch: gru}
-      - {input: daily, daily_arch: gru}
-  - name: size
-    variants:
-      - {units: 16}
-      - {units: 64}
-      - {dense: []}
-      - {dense: [32]}
-      - {bidirectional: true}
-  - name: regularisation
-    variants:
-      - {dropout: 0.2}
-      - {dropout: 0.4}
-      - {rnn_dropout: 0.2}
-      - {l2: 0.0001}
-  - name: optimisation
-    variants:
-      - {lr: 0.0003}
-      - {lr: 0.003}
-      - {batch_size: 16}
-      - {batch_size: 64}
-      - {reduce_lr: true}
-  - name: loss
-    variants:
-      - {loss: huber}
-  - name: extra_inputs
-    variants:
-      - {text: true}
-      - {calendar: false}
-  # Second pass, added after the first full run: in the first pass the input stage ran BEFORE
-  # dropout/Huber/ReduceLROnPlateau were added, and the hourly input lost there. Re-testing the
-  # input and target with the tuned settings (validation + K-fold only) showed it now helps.
-  - name: second_pass_input
-    variants:
-      - {input: hourly, hourly_arch: gru}
-      - {input: hourly, hourly_arch: lstm}
-      - {input: both, daily_arch: gru, hourly_arch: gru}
-  - name: second_pass_target
-    variants:
-      - {target: absolute}
+# ---------------------------------------------------------------------------------------------
+# Targets: the next day's daily mean, minimum and maximum temperature (local calendar day).
+targets: [mean, min, max]
 
-# Feature ablation on the final (K-fold winner) configuration (for the presentation): drop one group at a time.
-ablation: [temperature, moisture, visibility, pressure, wind, sky]
+# Settings shared by all candidate networks (§7). Chosen up front, with the reasons in the notebook:
+#  - delta target: tomorrow is very close to today (autocorrelation 0.97), so the network learns the change
+#  - dropout 0.4, Dense(32) head, lr 0.0003: small dataset (~2,900 training days) -> overfitting risk;
+#    values from the preliminary experiments in the appendix
+common:
+  units: 32
+  bidirectional: false
+  dense: [32]
+  dropout: 0.4
+  rnn_dropout: 0.0
+  l2: 0.0
+  target: delta
+  text: false
+  calendar: true
+  loss: mse
+  lr: 0.0003
+  batch_size: 32
+  epochs: 300
+  patience: 15
+  reduce_lr: false
+  daily_arch: gru
+  hourly_arch: gru
 
-# Robustness check of the top configurations: blocked K-fold over years (regression.ipynb uses
-# K-fold for small data; blocks of whole years instead of random rows avoid temporal leakage).
+# Candidate networks (§7). Each is evaluated with blocked K-fold (5 folds x 3 seeds) on every target.
+candidates:
+  - name: "Dense (Class 2 baseline)"
+    why: "the course's starting point for tabular data, exactly as taught"
+    params: baseline          # the 'baseline' block above, unchanged
+    outputs: [single]
+  - name: "Dense (shared settings)"
+    why: "same architecture with the shared settings - separates the effect of settings from architecture"
+    params: {input: daily, daily_arch: flatten}
+  - name: "Daily GRU"
+    why: "reads the 3 days in order (Class 2, language.ipynb), instead of a flat list of numbers"
+    params: {input: daily}
+  - name: "Hourly GRU"
+    why: "the daily cycle and the latest hours are hidden in daily averages (§3); read all 72 hours"
+    params: {input: hourly}
+  - name: "Two-branch GRU"
+    why: "hourly detail + compact daily summaries (min/max, pressure change, trends) together"
+    params: {input: both}
+  - name: "Two-branch GRU + attention"
+    why: "a learned weight per hour, so the model can focus on the most informative hours"
+    params: {input: both, attention: true}
+
+# Output designs tried for every candidate (except where 'outputs' is given):
+#  single   - one model per target (3 separate models)
+#  joint    - one model with 3 outputs (mean, min, max); the targets share what the network learns
+#  hourly24 - one model predicting the next day's 24 hourly temperatures; mean/min/max are derived
+outputs: [single, joint, hourly24]
+
+# Blocked K-fold over years (regression.ipynb uses K-fold for small data; whole years avoid leakage).
 cv:
-  top_k: 3
   folds: [[2006, 2007], [2008, 2009], [2010, 2011], [2012, 2013], [2014, 2015]]
 
-# Final evaluation on the 2016 test set, done once after the configuration is chosen.
-run_test: true
-
-# ---------------------------------------------------------------------------------------------
-# Beyond the course templates (§7b): ideas tailored to weather data, each added on top of the
-# K-fold winner above and evaluated directly with blocked K-fold (5 folds x 3 seeds).
-tailored:
-  - name: "multi-task: predict mean + min + max"
-    why: "min/max are driven by the same physics; extra supervision helps with only ~3,600 training days"
-    change: {aux: minmax}
-  - name: "predict the 24 hourly temperatures"
-    why: "a richer target - the model must get the whole daily curve right; the mean is their average"
-    change: {aux: hourly24}
-  - name: "Conv1D -> GRU on the hourly input"
-    why: "convolution summarises 3-hour blocks so the GRU reads 24 steps instead of 72"
-    change: {hourly_arch: conv_gru}
-  - name: "attention over the 72 hours"
-    why: "lets the model weight the most informative hours (e.g. the latest ones) instead of only the last GRU state"
-    change: {attention: true}
-  - name: "wider network + stronger dropout"
-    why: "more capacity, with more dropout to keep overfitting in check"
-    change: {units: 64, dropout: 0.5}
-
-# Classic machine-learning benchmarks on the same inputs, target and folds (is deep learning needed?).
+# Classic machine-learning benchmarks on the same inputs, targets and folds.
 classic:
   hgb: {max_iter: 1000, learning_rate: 0.05, max_leaf_nodes: 31, l2_regularization: 1.0}
-  ridge_alphas: [1.0, 10.0, 100.0, 1000.0, 3000.0, 10000.0, 30000.0]
+  ridge_alphas: [10.0, 100.0, 1000.0, 3000.0, 10000.0]
 
-# Architecture justification (§7c): remove / replace one component of the final model at a time.
+# Why each part of the chosen models is there (§8): remove / replace one component at a time.
 justification:
   - {name: "without the hourly branch", change: {input: daily}}
   - {name: "without the daily branch", change: {input: hourly}}
-  - {name: "predict the temperature instead of the change", change: {target: absolute}}
+  - {name: "without attention", change: {attention: false}}
+  - {name: "predict the value instead of the change", change: {target: absolute}}
   - {name: "daily rows flattened instead of GRU", change: {daily_arch: flatten}}
   - {name: "without dropout", change: {dropout: 0.0}}
-  - {name: "MSE instead of Huber loss", change: {loss: mse}}
   - {name: "without the calendar input", change: {calendar: false}}
-  - {name: "without ReduceLROnPlateau", change: {reduce_lr: false}}
-  - {name: "one output instead of 24 hourly outputs", change: {aux: none}}
-  - {name: "without attention", change: {attention: false}}
+
+# Which inputs matter (§8): drop one feature group at a time from the chosen models.
+feature_ablation: [temperature, moisture, visibility, pressure, wind, sky]
+
+# Final evaluation on the test period (1 Jan - 3 Nov 2016).
+run_test: true

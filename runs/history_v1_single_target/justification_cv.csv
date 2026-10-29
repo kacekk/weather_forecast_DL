@@ -1,0 +1,10 @@
+variant,cv_mean,cv_std,cv_ens_mean,cv_ens_std,median_best_epoch,cost of removing (°C),SE,t
+final model (nothing removed),1.1448,0.0327,1.1228,0.0376,91,,,
+without the hourly branch,1.218,0.0482,1.2048,0.0505,95,0.0732,0.0098,7.5047
+without the daily branch,1.1553,0.0371,1.1292,0.0417,97,0.0104,0.0041,2.5205
+predict the temperature instead of the change,1.1589,0.0448,1.1336,0.044,56,0.0141,0.0064,2.2056
+daily rows flattened instead of GRU,1.1528,0.0413,1.1304,0.044,100,0.0079,0.0049,1.5981
+without dropout,1.1536,0.0335,1.1265,0.0342,58,0.0087,0.0028,3.1145
+without the calendar input,1.1783,0.0402,1.1572,0.0433,79,0.0334,0.0037,8.9797
+one output instead of 24 hourly outputs,1.1477,0.031,1.1252,0.033,70,0.0029,0.0029,0.999
+without attention,1.1475,0.0347,1.1296,0.035,83,0.0026,0.0032,0.8252

@@ -1,42 +1,28 @@
 {
-  "test_mae_mean": 1.1732616821924846,
-  "test_mae_std": 0.019305109600952015,
-  "test_mae_per_seed": [
-    1.1648234128952026,
-    1.1596122980117798,
-    1.1953493356704712
-  ],
-  "test_mae_seed_ensemble": 1.1516016721725464,
-  "test_rmse_seed_ensemble": 1.556653618812561,
-  "test_persistence_mae": 1.6729322671890259,
-  "test_climatology_mae": 2.841690908296657,
-  "epochs": 91,
-  "params": {
-    "batch_size": 32,
-    "bidirectional": false,
-    "calendar": true,
-    "daily_arch": "gru",
-    "dense": [
-      32
-    ],
-    "dropout": 0.4,
-    "epochs": 300,
-    "hourly_arch": "gru",
-    "input": "both",
-    "l2": 0.0,
-    "loss": "mse",
-    "lr": 0.0003,
-    "patience": 15,
-    "reduce_lr": false,
-    "rnn_dropout": 0.0,
-    "target": "delta",
-    "text": false,
-    "units": 32,
-    "aux": "hourly24",
-    "attention": true
+  "test_days": 308,
+  "period": "2016-01-01 \u2013 2016-11-03",
+  "mean": {
+    "model": "Two-branch GRU + attention [hourly24]",
+    "seed_ensemble_mae": 1.1516016721725464,
+    "single_mae_mean": 1.1732616821924846,
+    "single_mae_std": 0.019305109600952015,
+    "persistence_mae": 1.6729322671890259,
+    "climatology_mae": 2.841690908296657
   },
-  "test_min_mae_model": 1.3199281692504883,
-  "test_min_mae_persistence": 2.1847763061523438,
-  "test_max_mae_model": 2.0436298847198486,
-  "test_max_mae_persistence": 2.553427219390869
+  "min": {
+    "model": "Two-branch GRU [single]",
+    "seed_ensemble_mae": 1.1261835098266602,
+    "single_mae_mean": 1.152842362721761,
+    "single_mae_std": 0.009289447069590643,
+    "persistence_mae": 2.1847763061523438,
+    "climatology_mae": 2.768702604736822
+  },
+  "max": {
+    "model": "Two-branch GRU + attention [single]",
+    "seed_ensemble_mae": 1.9876298904418945,
+    "single_mae_mean": 2.007671515146891,
+    "single_mae_std": 0.0121422629016145,
+    "persistence_mae": 2.553427219390869,
+    "climatology_mae": 3.6786442338044125
+  }
 }

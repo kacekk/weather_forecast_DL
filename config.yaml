@@ -10,6 +10,9 @@ data:
   # Chronological split by the date being predicted (no shuffling across time).
   train_end: "2013-12-31"   # train: 2006-2013
   val_end: "2015-12-31"     # validation: 2014-2015, test: 2016
+  # Real data ends here: 4 Nov - 31 Dec 2016 are artificial copies of the previous day (Issue 9),
+  # so no sample may predict a day after this date.
+  valid_until: "2016-11-03"
 
 seeds: [123, 2137, 15190]   # every configuration is trained with these 3 seeds
 

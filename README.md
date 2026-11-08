@@ -21,10 +21,10 @@ Final project for the Deep Learning course (Koźmiński University 2026/27, [`pa
 | min | two-branch GRU, separate network | **1.13 °C** | 2.18 °C | 48 % |
 | max | two-branch GRU + attention, separate network | **1.99 °C** | 2.55 °C | 22 % |
 
-- **Numbers:** average error in °C (MAE).
-- **K-fold** over 2006–2015 predicted the same improvements.
-- **Gradient-boosted trees** (the strongest classic method) are 5–13 % worse than our networks.
-- **Why the test ends on 3 November 2016:** after that date, every day in the dataset is a copy of the day before.
+1. **Numbers:** average error in °C (MAE).
+2. **K-fold** over 2006–2015 predicted the same improvements.
+3. **Gradient-boosted trees** (the strongest classic method) are 5–13 % worse than our networks.
+4. **Why the test ends on 3 November 2016:** after that date, every day in the dataset is a copy of the day before.
 
 **The network:**
 ```
@@ -34,7 +34,7 @@ tomorrow's day of year ───────────────────
 ```
 Each final model is the average of 3 trainings with different seeds.
 
-**Transparency:** earlier versions of the project also looked at the test period. The notebook's appendix lists every time.
+**Transparency:** earlier versions of the project also looked at the test period; the notebook's appendix lists every time.
 
 ## Files
 
@@ -47,7 +47,10 @@ Each final model is the average of 3 trainings with different seeds.
 
 ## Reproduce
 
-The dataset is not included in this repo. Download it from Kaggle ([arnab132/weather-dataset](https://www.kaggle.com/datasets/arnab132/weather-dataset), file `weatherHistory.csv`) into `data/`. `config.yaml` stores its SHA-256 hash, and the code checks it on load.
+1. The dataset is not included in this repo. Download it from Kaggle ([arnab132/weather-dataset](https://www.kaggle.com/datasets/arnab132/weather-dataset), file `weatherHistory.csv`) into `data/` (the third command below does this).
+2. `config.yaml` stores the file's SHA-256 hash, and the code checks it on load.
+3. Use Python 3.12: TensorFlow doesn't support 3.14 yet.
+4. Run:
 
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate
@@ -56,8 +59,11 @@ mkdir -p data && python -c "import kagglehub, shutil; shutil.copy(kagglehub.data
 jupyter lab weather_forecast.ipynb # run all cells top to bottom (~35 min on a laptop)
 ```
 
-Saved training runs in `runs/experiments.jsonl` and `runs/preds/` are reused, with identical results, because every run is repeatable. Delete them to retrain everything from scratch (930 runs, about 5 hours on a laptop using 6 processes). Use Python 3.12: TensorFlow doesn't support 3.14 yet.
+5. Saved training runs in `runs/experiments.jsonl` and `runs/preds/` are reused, with identical results, because every run is repeatable.
+6. Delete them to retrain everything from scratch (930 runs, about 5 hours on a laptop using 6 processes).
 
 ## Use of AI tools
 
-Required by the course: the code and first drafts of the explanations were produced with Claude Code (Anthropic) and reviewed by the team. Details are at the end of the notebook.
+1. Required by the course.
+2. The code and first drafts of the explanations were produced with Claude Code (Anthropic) and reviewed by the team.
+3. Details are at the end of the notebook.

@@ -1,5 +1,4 @@
-# All experiment settings live here (course rule: externalised configuration).
-# Change values here, not inside the code.
+# All settings of the project (Class 1 checklist). Change values here, not inside the code.
 
 data:
   path: data/weatherHistory.csv
@@ -16,54 +15,38 @@ data:
 
 seeds: [123, 2137, 15190]   # every configuration is trained with these 3 seeds
 
-# The Class 2 tabular baseline exactly as taught: Dense(64) -> Dense(32) -> Dense(1), Adam, MSE, batch 32.
-# All parameter names are explained here; the candidates below change only some of them.
-baseline:
-  input: daily              # daily | hourly | both
-  daily_arch: flatten       # how the 3 daily rows are read: flatten | lstm | gru
-  hourly_arch: gru          # how the 72 hourly rows are read: lstm | gru | conv1d
-  units: 32                 # units of the recurrent / conv layer
-  bidirectional: false
-  dense: [64, 32]           # dense layers after the input branches
-  dropout: 0.0
-  rnn_dropout: 0.0
-  l2: 0.0
-  target: absolute          # absolute | delta (= tomorrow's value minus today's value)
-  text: false               # add the 3 'Daily Summary' sentences as multi-hot words (Class 2 NLP)
-  calendar: true            # day-of-year (sin, cos) of the predicted day
-  loss: mse                 # mse | huber
-  lr: 0.001
-  batch_size: 32
-  epochs: 300
-  patience: 15              # early stopping on validation loss
-  reduce_lr: false
-
-# ---------------------------------------------------------------------------------------------
-# Targets: the next day's daily mean, minimum and maximum temperature (local calendar day).
+# What we predict: tomorrow's mean, minimum and maximum temperature (local calendar day).
 targets: [mean, min, max]
 
-# Settings shared by all candidate networks (§7). Chosen up front, with the reasons in the notebook:
-#  - delta target: tomorrow is very close to today (autocorrelation 0.97), so the network learns the change
-#  - dropout 0.4, Dense(32) head, lr 0.0003: small dataset (~2,900 training days) -> overfitting risk;
-#    values from the preliminary experiments in the appendix
+# The Class 2 network for tabular data, exactly as taught: Dense(64) -> Dense(32) -> output, Adam, MSE loss.
+# Every setting is explained here; "common" and the candidates below change only some of them.
+baseline:
+  input: daily              # daily | hourly | both
+  daily_arch: flatten       # how the 3 daily rows are read: flatten (one flat list of numbers) | gru
+  units: 32                 # size of each GRU layer
+  dense: [64, 32]           # dense layers after the input branches
+  dropout: 0.0
+  target: absolute          # absolute (the temperature itself) | delta (the change from today)
+  calendar: true            # day of the year of the predicted day as an input
+  lr: 0.001
+  batch_size: 32
+  epochs: 300               # maximum; early stopping ends training sooner
+  patience: 15              # early stopping: stop after 15 epochs without improvement on validation
+
+# Settings shared by all other networks (§7), fixed before the comparison:
+#  - delta target: tomorrow is very close to today, so the network learns the change
+#  - dropout 0.4, one Dense(32) layer, lr 0.0003: small dataset (~2,900 training days) -> overfitting risk
 common:
   units: 32
-  bidirectional: false
   dense: [32]
   dropout: 0.4
-  rnn_dropout: 0.0
-  l2: 0.0
   target: delta
-  text: false
   calendar: true
-  loss: mse
   lr: 0.0003
   batch_size: 32
   epochs: 300
   patience: 15
-  reduce_lr: false
   daily_arch: gru
-  hourly_arch: gru
 
 # Candidate networks (§7). Each is evaluated with blocked K-fold (5 folds x 3 seeds) on every target.
 candidates:
@@ -115,5 +98,3 @@ justification:
 # Which inputs matter (§8): drop one feature group at a time from the chosen models.
 feature_ablation: [temperature, moisture, visibility, pressure, wind, sky]
 
-# Final evaluation on the test period (1 Jan - 3 Nov 2016).
-run_test: true

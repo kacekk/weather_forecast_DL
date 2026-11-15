@@ -5,29 +5,21 @@
     "params": {
       "input": "both",
       "daily_arch": "gru",
-      "hourly_arch": "gru",
       "units": 32,
-      "bidirectional": false,
       "dense": [
         32
       ],
       "dropout": 0.4,
-      "rnn_dropout": 0.0,
-      "l2": 0.0,
       "target": "delta",
-      "text": false,
       "calendar": true,
-      "loss": "mse",
       "lr": 0.0003,
       "batch_size": 32,
       "epochs": 300,
       "patience": 15,
-      "reduce_lr": false,
       "attention": true,
       "aux": "hourly24"
     },
-    "epochs": 91,
-    "seed_ensemble": true
+    "epochs": 91
   },
   "min": {
     "model": "Two-branch GRU",
@@ -35,28 +27,20 @@
     "params": {
       "input": "both",
       "daily_arch": "gru",
-      "hourly_arch": "gru",
       "units": 32,
-      "bidirectional": false,
       "dense": [
         32
       ],
       "dropout": 0.4,
-      "rnn_dropout": 0.0,
-      "l2": 0.0,
       "target": "delta",
-      "text": false,
       "calendar": true,
-      "loss": "mse",
       "lr": 0.0003,
       "batch_size": 32,
       "epochs": 300,
       "patience": 15,
-      "reduce_lr": false,
       "target_var": "min"
     },
-    "epochs": 83,
-    "seed_ensemble": true
+    "epochs": 83
   },
   "max": {
     "model": "Two-branch GRU + attention",
@@ -64,28 +48,20 @@
     "params": {
       "input": "both",
       "daily_arch": "gru",
-      "hourly_arch": "gru",
       "units": 32,
-      "bidirectional": false,
       "dense": [
         32
       ],
       "dropout": 0.4,
-      "rnn_dropout": 0.0,
-      "l2": 0.0,
       "target": "delta",
-      "text": false,
       "calendar": true,
-      "loss": "mse",
       "lr": 0.0003,
       "batch_size": 32,
       "epochs": 300,
       "patience": 15,
-      "reduce_lr": false,
       "attention": true,
       "target_var": "max"
     },
-    "epochs": 57,
-    "seed_ensemble": true
+    "epochs": 57
   }
 }

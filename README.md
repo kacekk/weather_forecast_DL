@@ -40,7 +40,7 @@ Each final model is the average of 3 trainings with different seeds.
 
 | File | What it is |
 |---|---|
-| `weather_forecast.ipynb` | **the whole project**: data exploration, cleaning, features, models, comparison, final test and conclusions. It starts with a one-minute summary and a list of key terms. |
+| `weather_forecast.ipynb` | **the whole project**: data exploration, cleaning, features, models, comparison, final test and conclusions. It starts with a one-minute summary and a list of key terms, and follows a few example rows through every step of the data pipeline. |
 | `config.yaml` | every setting: targets, shared settings, the networks to compare (with the reason for each), K-fold years |
 | `runs/` | every training run, the chosen models, test predictions, and archives of earlier versions (`history_*`) |
 | `requirements.txt` | exact library versions |
@@ -64,6 +64,7 @@ jupyter lab weather_forecast.ipynb # run all cells top to bottom (~35 min on a l
 
 ## Use of AI tools
 
-1. Required by the course.
-2. The code and first drafts of the explanations were produced with Claude Code (Anthropic) and reviewed by the team.
-3. Details are at the end of the notebook.
+The course (`Grading.md`) allows AI tools, but asks each team to say whether they used them and for what, and to be able to explain every part of the project.
+1. **What we used:** Claude Code (Anthropic).
+2. **What for:** writing the code and the first drafts of the explanations.
+3. **How we checked it:** the team reviewed everything. Details are at the end of the notebook.

@@ -6,23 +6,20 @@
     "seed_ensemble_mae": 1.1516016721725464,
     "single_mae_mean": 1.1732616821924846,
     "single_mae_std": 0.019305109600952015,
-    "persistence_mae": 1.6729322671890259,
-    "climatology_mae": 2.841690908296657
+    "persistence_mae": 1.6729322671890259
   },
   "min": {
     "model": "Two-branch GRU [single]",
     "seed_ensemble_mae": 1.1261835098266602,
     "single_mae_mean": 1.152842362721761,
     "single_mae_std": 0.009289447069590643,
-    "persistence_mae": 2.1847763061523438,
-    "climatology_mae": 2.768702604736822
+    "persistence_mae": 2.1847763061523438
   },
   "max": {
     "model": "Two-branch GRU + attention [single]",
     "seed_ensemble_mae": 1.9876298904418945,
     "single_mae_mean": 2.007671515146891,
     "single_mae_std": 0.0121422629016145,
-    "persistence_mae": 2.553427219390869,
-    "climatology_mae": 3.6786442338044125
+    "persistence_mae": 2.553427219390869
   }
 }

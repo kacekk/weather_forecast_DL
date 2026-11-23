@@ -58,7 +58,7 @@ candidates:
     why: "same architecture with the shared settings - separates the effect of settings from architecture"
     params: {input: daily, daily_arch: flatten}
   - name: "Daily GRU"
-    why: "reads the 3 days in order (Class 2, language.ipynb), instead of a flat list of numbers"
+    why: "reads the 3 days in order (Class 3, language.ipynb), instead of a flat list of numbers"
     params: {input: daily}
   - name: "Hourly GRU"
     why: "the daily cycle and the latest hours are hidden in daily averages (§3); read all 72 hours"

@@ -44,7 +44,7 @@ Each final model is the average of 3 trainings with different seeds.
 | `config.yaml` | every setting: targets, shared settings, the networks to compare (with the reason for each), K-fold years |
 | `runs/` | every training run, the chosen models, test predictions, and archives of earlier versions (`history_*`) |
 | `requirements.txt` | exact library versions |
-| `presentation/weather_forecast_presentation.pptx` | the 10-minute presentation (11 slides with speaker notes, plus a live look at the notebook) |
+| `presentation/weather_forecast_presentation.pptx` | the 10-minute presentation (13 slides with speaker notes, plus a live look at the notebook) |
 
 ## Reproduce
 
